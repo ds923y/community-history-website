@@ -1,69 +1,88 @@
-Welcome to the AWS CodeStar sample web service
-==============================================
+Pedestal on API Gateway and Lambda
+===================================
 
-This sample code helps get you started with a simple Java web service using
-AWS Lambda and Amazon API Gateway.
+This is an example on running a Pedestal Service on AWS Lambda via API Gateway.
+It's designed to be a [CodeStar](https://aws.amazon.com/codestar/) project and ships with CodePipeline and CloudFormation support.
 
-What's Here
------------
+Even though this project can be deployed on AWS Lambda, it can still run on Jetty.
+
+## What's Here
 
 This sample includes:
 
 * README.md - this file
 * buildspec.yml - this file is used by AWS CodeBuild to build the web
   service
-* pom.xml - this file is the Maven Project Object Model for the web service
-* src/main - this directory contains your Java service source files
-* src/test - this directory contains your Java service unit test files
-* template.yml - this file contains the AWS Serverless Application Model (AWS SAM) used
-  by AWS CloudFormation to deploy your application to AWS Lambda and Amazon API
+* project.clj - managing dependencies
+* src/ - this directory contains your Clojure/Pedestal service source files
+* template.yml - this file contains the Serverless Application Model (SAM) used
+  by AWS Cloudformation to deploy your application to AWS Lambda and Amazon API
   Gateway.
 
+## Getting Started on Jetty or running locally
 
-What Do I Do Next?
-------------------
+1. Start the application: `lein run`
+2. Go to [localhost:8080](http://localhost:8080/) to see: `Hello World!`
+3. Read your app's source code at src/pedestal_lambda/service.clj. Explore the docs of functions
+   that define routes and responses.
+4. Run your app's tests with `lein test`. Read the tests at test/pedestal_lambda/service_test.clj.
+5. Learn more! See the [Links section below](#links).
 
-If you have checked out a local copy of your repository you can start making changes
-to the sample code.  We suggest making a small change to index.py first, so you can
-see how changes pushed to your project's repository are automatically picked up by
-your project pipeline and deployed to AWS Lambda and Amazon API Gateway. (You can
-watch the pipeline progress on your AWS CodeStar project dashboard.) Once you've seen
-how that works, start developing your own code, and have fun!
 
-To run your tests locally, go to the root directory of the sample code and run the
-`mvn clean compile test` command, which AWS CodeBuild also runs through your `buildspec.yml` file.
+## Getting Started on AWS
 
-To test your new code during the release process, modify the existing tests or add tests
-to the tests directory. AWS CodeBuild will run the tests during the build stage of your
-project pipeline. You can find the test results in the AWS CodeBuild console.
+1. Create a new CodeStar project, based on the Java+Lambda template
+2. Delete all the files in that project and replace them with these files (including `.gitignore`).
+3. Commit and push the changes up into the repo, kicking off the CodePipeline
+4. Visit your Prod URL (you may need to go to /about to see a result).
 
-Learn more about Maven's [Standard Directory Layout](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html).
 
-Learn more about managing Maven dependencies with AWS SDK for Java using the
-[Bill of Materials Module](https://aws.amazon.com/blogs/developer/managing-dependencies-with-aws-sdk-for-java-bill-of-materials-module-bom/).
+## Configuration
 
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
+To configure logging see config/logback.xml. By default, the app logs to stdout and logs/.
+To learn more about configuring Logback, read its [documentation](http://logback.qos.ch/documentation.html).
 
-Learn more about AWS Serverless Application Model (AWS SAM) and how it works here:
+
+## Developing your service
+
+1. Start a new REPL: `lein repl`
+2. Start your service in dev-mode: `(def dev-serv (run-dev))`
+3. Connect your editor to the running REPL session.
+   Re-evaluated code will be seen immediately in the service.
+
+### [Docker](https://www.docker.com/) container support
+
+1. Build an uberjar of your service: `lein uberjar`
+2. Build a Docker image: `sudo docker build -t pedestal-lambda .`
+3. Run your Docker image: `docker run -p 8080:8080 pedestal-lambda`
+
+### [OSv](http://osv.io/) unikernel support with [Capstan](http://osv.io/capstan/)
+
+1. Build and run your image: `capstan run -f "8080:8080"`
+
+Once the image it built, it's cached.  To delete the image and build a new one:
+
+1. `capstan rmi pedestal-lambda; capstan build`
+
+
+## What Do I Do Next Regarding AWS?
+
+Start making changes to the sample code and push to your project's repository.
+Notice how changes to AWS CodeCommit are automatically picked up and deployed.
+
+Learn more about Serverless Application Model (SAM) and how it works here:
 https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md
 
 AWS Lambda Developer Guide:
 http://docs.aws.amazon.com/lambda/latest/dg/deploying-lambda-apps.html
 
 Learn more about AWS CodeStar by reading the user guide, and post questions and
-comments about AWS CodeStar on our forum.
+comments about AWS CodeStar on the AWS CodeStar forum.
 
-User Guide: http://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
+AWS CodeStar User Guide:
+http://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
 
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
+AWS CodeStar Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
 
-What Should I Do Before Running My Project in Production?
-------------------
-
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
-
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+## Links
+* [Other examples](https://github.com/pedestal/samples)
