@@ -23,7 +23,7 @@
 (def common-interceptors [(body-params/body-params) http/json-body])
 
 ;; Tabular routes
-(def routes #{["/" :get (conj common-interceptors `home-page)]
+(def routes #{["/home" :get (conj common-interceptors `home-page)]
               ["/about" :get (conj common-interceptors `about-page)]})
 
 ;; Map-based routes
